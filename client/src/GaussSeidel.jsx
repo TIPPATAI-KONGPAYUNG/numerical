@@ -8,8 +8,8 @@ const GaussSeidel = () => {
     const [vectorB, setVectorB] = useState([]);
     const [solutionX, setSolutionX] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [error, setError] = useState(null); // State for error messages
-    const [No, setNo] = useState(14); // Setting No = 12 for fetching data
+    const [error, setError] = useState(null);  
+    const [No, setNo] = useState(14);  
 
     useEffect(() => {
         getData();

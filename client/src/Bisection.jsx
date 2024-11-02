@@ -6,51 +6,58 @@ import Axios from 'axios';
 const Bisection = () => {
     const [data, setData] = useState([]);
     const [firstResult, setFirstResult] = useState(null);
-    const [Equation, setEquation] = useState("(x^4)-13");
+    const [Equation, setEquation] = useState('');
     const [X, setX] = useState(0);
-    const [XL, setXL] = useState("1");
-    const [XR, setXR] = useState("10");
-    const [initialData, setInitialData] = useState({});
+    const [XL, setXL] = useState('');
+    const [XR, setXR] = useState(''); 
     const [No, setNo] = useState(2); 
 
     useEffect(() => {
         getData();
     }, [No]);
 
-    useEffect(() => {
-        if (initialData.equation !== Equation || initialData.xl !== XL || initialData.xr !== XR) {
-            updateData();
-        }
-    }, [Equation, XL, XR]);
-
     const getData = () => {
-        Axios.get(`http://localhost:3001/${No}`).then((response) => {
-            if (response.data.length > 0) {
-                const receivedData = response.data[0];
-                setEquation(receivedData.equation); 
-                setXL(receivedData.xl);
-                setXR(receivedData.xr);
-                setInitialData(receivedData);
-
-                setInitialData({ equation: receivedData.equation, xr: receivedData.xr, xl: receivedData.xl });
-            } else {
-                console.error("No data found for the specified No.");
-            }
-        }).catch((error) => {
-            console.error("Error fetching data:", error);
-        });
+        Axios.get(`http://localhost:3001/${No}`)
+            .then((response) => {
+                const receivedData = response.data;
+                if (receivedData) {
+                    setEquation(receivedData.equation); 
+                    setXL(receivedData.xl);
+                    setXR(receivedData.xr);
+                } else {
+                    console.error("No data found for the specified No.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
     };
 
     const updateData = () => {
         Axios.put(`http://localhost:3001/update/${No}`, {
-            equation: Equation, 
-            xl: XL,
-            xr: XR
+            equation: Equation.toString(), 
+            xl: XL.toString(),
+            xr: XR.toString()
         }).then(() => {
             console.log("Data updated successfully");
         }).catch((error) => {
             console.error("Error updating data:", error);
         });
+    };
+
+    const handleEquationChange = (e) => {
+        setEquation(e.target.value);
+        updateData();
+    };
+
+    const handleXLChange = (e) => {
+        setXL(e.target.value);
+        updateData();
+    };
+
+    const handleXRChange = (e) => {
+        setXR(e.target.value);
+        updateData();
     };
 
     const calculateError = (oldX, newX) => Math.abs((newX - oldX) / newX) * 100;
@@ -89,10 +96,6 @@ const Bisection = () => {
         if (firstResult === null) setFirstResult(xm);
     };
     
-    const inputEquation = (event) => setEquation(event.target.value);
-    const inputXL = (event) => setXL(event.target.value);
-    const inputXR = (event) => setXR(event.target.value);
-    
     const calculateRoot = () => {
         const xlnum = parseFloat(XL);
         const xrnum = parseFloat(XR);
@@ -109,12 +112,12 @@ const Bisection = () => {
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Input f(x)</Form.Label>
-                    <input type="text" value={Equation} onChange={inputEquation} style={{ width: "100%", margin: "0 auto" }} className="form-control" />
+                    <input type="text" value={Equation} onChange={handleEquationChange} style={{ width: "100%", margin: "0 auto" }} className="form-control" />
                     <br />
                     <Form.Label>Input XL</Form.Label>
-                    <input type="number" value={XL} onChange={inputXL} style={{ width: "30%", margin: "0 auto" }} className="form-control" />
+                    <input type="number" value={XL} onChange={handleXLChange} style={{ width: "30%", margin: "0 auto" }} className="form-control" />
                     <Form.Label>Input XR</Form.Label>
-                    <input type="number" value={XR} onChange={inputXR} style={{ width: "30%", margin: "0 auto" }} className="form-control" />
+                    <input type="number" value={XR} onChange={handleXRChange} style={{ width: "30%", margin: "0 auto" }} className="form-control" />
                 </Form.Group>
                 <Button variant="dark" onClick={calculateRoot}>
                     Calculate

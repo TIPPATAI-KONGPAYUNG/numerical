@@ -1,0 +1,17 @@
+version: '3'
+services:
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"  # Map to the frontend port
+    depends_on:
+      - server
+
+  server:
+    build: ./server
+    ports:
+      - "3001:3001"  # Map to the backend port
+    environment:
+      - MONGODB_URI=mongodb+srv://s6504062616071:art@art.ay4iq.mongodb.net/numerical?retryWrites=true&w=majority&appName=Art  # ใช้ MongoDB URI ของคุณ
+
+

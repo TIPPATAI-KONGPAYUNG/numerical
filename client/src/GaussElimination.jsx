@@ -9,7 +9,7 @@ const GaussElimination = () => {
     const [matrixB, setMatrixB] = useState([]);
     const [answer, setAnswer] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [No, setNo] = useState(8); // Adjust according to your data set
+    const [No, setNo] = useState(8); 
 
     useEffect(() => {
         getData();

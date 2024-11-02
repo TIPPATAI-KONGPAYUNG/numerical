@@ -8,9 +8,9 @@ const Lu = () => {
     const [vectorB, setVectorB] = useState([]);
     const [lowerMatrix, setLowerMatrix] = useState([]);
     const [upperMatrix, setUpperMatrix] = useState([]);
-    const [solutionX, setSolutionX] = useState([]); // State for solution vector x
+    const [solutionX, setSolutionX] = useState([]); 
     const [showOutput, setShowOutput] = useState(false);
-    const [No, setNo] = useState(11); // Setting No = 11 for fetching data
+    const [No, setNo] = useState(11);  
 
     useEffect(() => {
         getData();
@@ -19,7 +19,7 @@ const Lu = () => {
     useEffect(() => {
         const newMatrixA = Array.from({ length: size }, () => Array(size).fill(0));
         setMatrixA(newMatrixA);
-        setVectorB(Array(size).fill(0)); // Initialize vector b when size changes
+        setVectorB(Array(size).fill(0));  
     }, [size]);
 
     const getData = () => {
@@ -58,14 +58,14 @@ const Lu = () => {
         // Decomposing the matrix into upper and lower matrices
         for (let i = 0; i < n; i++) {
             for (let j = i; j < n; j++) {
-                upper[i][j] = matrixA[i][j]; // Upper triangular matrix
+                upper[i][j] = matrixA[i][j];  
                 for (let k = 0; k < i; k++) {
                     upper[i][j] -= lower[i][k] * upper[k][j];
                 }
             }
             for (let j = i; j < n; j++) {
                 if (i === j) {
-                    lower[i][i] = 1; // Diagonal as 1
+                    lower[i][i] = 1; 
                 } else {
                     lower[j][i] = matrixA[j][i]; // Lower triangular matrix
                     for (let k = 0; k < i; k++) {
@@ -78,7 +78,7 @@ const Lu = () => {
 
         setLowerMatrix(lower);
         setUpperMatrix(upper);
-        calculateSolution(lower, upper); // Call function to calculate x
+        calculateSolution(lower, upper);  
         setShowOutput(true);
     };
 
@@ -101,10 +101,10 @@ const Lu = () => {
             for (let j = i + 1; j < n; j++) {
                 x[i] -= upper[i][j] * x[j];
             }
-            x[i] /= upper[i][i]; // Divide by the pivot element
+            x[i] /= upper[i][i];  
         }
 
-        setSolutionX(x); // Set the solution vector x
+        setSolutionX(x);  
     };
 
     const handleInputChange = (i, j, value) => {

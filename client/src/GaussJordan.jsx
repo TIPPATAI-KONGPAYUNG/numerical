@@ -9,7 +9,7 @@ const GaussJordan = () => {
     const [matrixB, setMatrixB] = useState([]);
     const [answer, setAnswer] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [No, setNo] = useState(9); // Change No to 9 for Gauss-Jordan
+    const [No, setNo] = useState(9); 
 
     useEffect(() => {
         getData();

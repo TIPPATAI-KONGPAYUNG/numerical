@@ -9,7 +9,7 @@ const Conjugate = () => {
     const [solutionX, setSolutionX] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
     const [error, setError] = useState(null);
-    const [No, setNo] = useState(15); // Setting No = 12 for fetching data
+    const [No, setNo] = useState(15);  
 
     useEffect(() => {
         getData();
@@ -17,7 +17,7 @@ const Conjugate = () => {
 
     useEffect(() => {
         const newMatrixA = Array.from({ length: size }, () => Array(size).fill(0));
-        const newVectorB = Array(size).fill(0); // Initialize vector b when size changes
+        const newVectorB = Array(size).fill(0);  
         setMatrixA(newMatrixA);
         setVectorB(newVectorB);
     }, [size]);

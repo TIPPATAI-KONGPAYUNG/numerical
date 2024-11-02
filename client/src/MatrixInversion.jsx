@@ -9,7 +9,7 @@ const MatrixInversion = () => {
     const [inverseMatrix, setInverseMatrix] = useState([]);
     const [solutionX, setSolutionX] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [No, setNo] = useState(10); // Setting No = 10 for fetching data
+    const [No, setNo] = useState(10);  
 
     useEffect(() => {
         getData();
@@ -27,10 +27,10 @@ const MatrixInversion = () => {
             const receivedData = response.data;
             if (receivedData) {
                 const parsedA = JSON.parse(receivedData.a);
-                const parsedB = JSON.parse(receivedData.b); // Assuming 'b' is sent from the server
+                const parsedB = JSON.parse(receivedData.b);  
                 setMatrixA(parsedA);
-                setVectorB(parsedB); // Set the vector b from the received data
-                setSize(parseInt(receivedData.n, 10)); // Assuming 'n' is the size of the matrix
+                setVectorB(parsedB);  
+                setSize(parseInt(receivedData.n, 10));  
             } else {
                 console.error("No data found for the specified No.");
             }

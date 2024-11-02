@@ -6,46 +6,38 @@ import Axios from 'axios';
 const SecantMethod = () => {
   const [data, setData] = useState([]);
   const [result, setResult] = useState(null);
-  const [initialGuess1, setInitialGuess1] = useState(2); // First initial guess
-  const [initialGuess2, setInitialGuess2] = useState(3); // Second initial guess
-  const [equation, setEquation] = useState("(x ^2) -7");
+  const [initialGuess1, setInitialGuess1] = useState();
+  const [initialGuess2, setInitialGuess2] = useState(); 
+  const [equation, setEquation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [no, setNo] = useState(7); // Set your key value here
-  const [initialData, setInitialData] = useState({});
+  const [no, setNo] = useState(6); 
 
   useEffect(() => {
     getData();
   }, [no]);
 
-  useEffect(() => {
-    if (initialData.equation !== equation || initialData.xl !== initialGuess1 || initialData.xr !== initialGuess2) {
-      updateData();
-    }
-  }, [equation, initialGuess1, initialGuess2]);
-
   const getData = () => {
     Axios.get(`http://localhost:3001/${no}`)
-      .then((response) => {
-        if (response.data.length > 0) {
-          const receivedData = response.data[0];
-          setEquation(receivedData.equation);
-          setInitialGuess1(receivedData.xl);
-          setInitialGuess2(receivedData.xr);
-          setInitialData(receivedData);
-        } else {
-          console.error("No data found for the specified No.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
+        .then((response) => {
+            const receivedData = response.data;
+            if (receivedData) {
+                setEquation(receivedData.equation); 
+                setInitialGuess1(receivedData.x1);
+                setInitialGuess2(receivedData.x2);
+            } else {
+                console.error("No data found for the specified No.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+};
 
   const updateData = () => {
     Axios.put(`http://localhost:3001/update/${no}`, {
-      equation: equation,
-      xl: initialGuess1,
-      xr: initialGuess2
+      equation: equation.toString(),
+      xl: initialGuess1.toString(),
+      xr: initialGuess2.toString()
     })
       .then(() => {
         console.log("Data updated successfully");
@@ -103,14 +95,19 @@ const SecantMethod = () => {
     setData(newData);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "initialGuess1") setInitialGuess1(value);
-    if (name === "initialGuess2") setInitialGuess2(value);
+  const handleInput1Change = (e) => {
+    setInitialGuess1(e.target.value);
+    updateData();
+  };
+  
+  const handleInput2Change = (e) => {
+    setInitialGuess2(e.target.value);
+    updateData();
   };
 
   const handleEquationChange = (e) => {
     setEquation(e.target.value);
+    updateData();
   };
 
   return (
@@ -131,7 +128,7 @@ const SecantMethod = () => {
             type="number"
             name="initialGuess1"
             value={initialGuess1}
-            onChange={handleInputChange}
+            onChange={handleInput1Change}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
             step="0.1"
@@ -141,7 +138,7 @@ const SecantMethod = () => {
             type="number"
             name="initialGuess2"
             value={initialGuess2}
-            onChange={handleInputChange}
+            onChange={handleInput2Change}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
             step="0.1"

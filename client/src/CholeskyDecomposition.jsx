@@ -9,8 +9,8 @@ const CholeskyDecomposition = () => {
     const [lowerMatrix, setLowerMatrix] = useState([]);
     const [solutionX, setSolutionX] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [error, setError] = useState(null); // State for error messages
-    const [No, setNo] = useState(12); // Setting No = 12 for fetching data
+    const [error, setError] = useState(null);  
+    const [No, setNo] = useState(12);  
 
     useEffect(() => {
         getData();
@@ -18,7 +18,7 @@ const CholeskyDecomposition = () => {
 
     useEffect(() => {
         const newMatrixA = Array.from({ length: size }, () => Array(size).fill(0));
-        const newVectorB = Array(size).fill(0); // Initialize vector b when size changes
+        const newVectorB = Array(size).fill(0);  
         setMatrixA(newMatrixA);
         setVectorB(newVectorB);
     }, [size]);
@@ -55,8 +55,7 @@ const CholeskyDecomposition = () => {
     const choleskyDecomposition = () => {
         const n = size;
         const lower = Array.from({ length: n }, () => Array(n).fill(0));
-        setError(null); // Reset error state before calculation
-
+        setError(null); // Reset error  
         try {
             for (let i = 0; i < n; i++) {
                 for (let j = 0; j <= i; j++) {

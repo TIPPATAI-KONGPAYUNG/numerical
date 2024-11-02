@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Form, Table } from 'react-bootstrap';
-import { det } from 'mathjs'; // Keep using det for determinants
+import { det } from 'mathjs'; 
 import Axios from 'axios';
 
 const Cramer = () => {
@@ -10,14 +10,13 @@ const Cramer = () => {
     const [matrixB, setMatrixB] = useState([]);
     const [answer, setAnswer] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [No, setNo] = useState(7); // Set to the No you want to fetch
+    const [No, setNo] = useState(7); 
 
     useEffect(() => {
         getData();
     }, [No]);
 
     useEffect(() => {
-        // Update matrixA and matrixB when row or column changes
         const newMatrixA = Array.from({ length: row }, () => Array(column).fill(0));
         const newMatrixB = Array(row).fill(0);
         setMatrixA(newMatrixA);
@@ -61,14 +60,14 @@ const Cramer = () => {
         const newMatrix = [...matrixA];
         newMatrix[i][j] = parseFloat(value);
         setMatrixA(newMatrix);
-        updateData(); // Update the database when matrix A is modified
+        updateData(); 
     };
 
     const handleInputChangeB = (i, value) => {
         const newMatrixB = [...matrixB];
         newMatrixB[i] = parseFloat(value);
         setMatrixB(newMatrixB);
-        updateData(); // Update the database when matrix B is modified
+        updateData(); 
     };
 
     const cramer = () => {
@@ -77,11 +76,11 @@ const Cramer = () => {
         const result = [];
 
         for (let counter = 0; counter < row; counter++) {
-            const transformMatrix = A.map(arr => [...arr]); // Deep copy
+            const transformMatrix = A.map(arr => [...arr]); 
             for (let i = 0; i < row; i++) {
-                transformMatrix[i][counter] = B[i]; // Replace column with B
+                transformMatrix[i][counter] = B[i]; 
             }
-            const xValue = det(transformMatrix) / det(A); // Calculate value
+            const xValue = det(transformMatrix) / det(A); 
             result.push(`X${counter + 1} = ${xValue}`);
         }
         setAnswer(result);
@@ -115,7 +114,7 @@ const Cramer = () => {
                                     <Form.Control
                                         key={`a${i}${j}`}
                                         type="number"
-                                        value={value} // Set the value from state
+                                        value={value} 
                                         onChange={(e) => handleInputChangeA(i, j, e.target.value)}
                                         placeholder={`a${i + 1}${j + 1}`}
                                         style={{ width: '60px', marginRight: '5px' }}
@@ -128,7 +127,7 @@ const Cramer = () => {
                             <Form.Control
                                 key={`b${i}`}
                                 type="number"
-                                value={value} // Set the value from state
+                                value={value} 
                                 onChange={(e) => handleInputChangeB(i, e.target.value)}
                                 placeholder={`b${i + 1}`}
                                 style={{ width: '60px', marginBottom: '5px' }}

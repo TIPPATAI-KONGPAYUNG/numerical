@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 app.use(cors());
 app.use(express.json());
@@ -10,6 +12,27 @@ app.use(express.json());
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://s6504062616071:art@art.ay4iq.mongodb.net/numerical?retryWrites=true&w=majority&appName=Art')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Failed to connect to MongoDB:', err));
+
+// Swagger options
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Numerical API",
+            version: "1.0.0",
+            description: "API documentation for the Numerical project",
+        },
+        servers: [
+            {
+                url: "http://localhost:3001", 
+            },
+        ],
+    },
+    apis: ["./index.js"], 
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Define schema and model for the numerical data
 const numSchema = new mongoose.Schema({
@@ -26,7 +49,25 @@ const numSchema = new mongoose.Schema({
 
 const Num = mongoose.model('Num', numSchema);
 
-// Get data by No
+/**
+ * @swagger
+ * /{no}:
+ *   get:
+ *     summary: Get data by No
+ *     parameters:
+ *       - name: no
+ *         in: path
+ *         required: true
+ *         description: The number to retrieve
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A single record
+ *       404:
+ *         description: No record found
+ */
+
 app.get('/:no', async (req, res) => {
     try {
         const no = parseInt(req.params.no, 10);
@@ -41,7 +82,48 @@ app.get('/:no', async (req, res) => {
     }
 });
 
-// Update data by No
+/**
+ * @swagger
+ * /update/{no}:
+ *   put:
+ *     summary: Update data by No
+ *     parameters:
+ *       - name: no
+ *         in: path
+ *         required: true
+ *         description: The number to update
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               equation:
+ *                 type: string
+ *               xl:
+ *                 type: string
+ *               xr:
+ *                 type: string
+ *               x:
+ *                 type: string
+ *               n:
+ *                 type: string
+ *               m:
+ *                 type: string
+ *               a:
+ *                 type: string
+ *               b:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Data updated successfully                                                                         
+ *       404:
+ *         description: No record found to update
+ */
+
 app.put('/update/:no', async (req, res) => {
     try {
         const no = parseInt(req.params.no, 10);

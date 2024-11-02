@@ -4,12 +4,12 @@ import Axios from 'axios';
 
 const Lagrange = () => {
     const [size, setSize] = useState(0);
-    const [x, setX] = useState([]); // Separate state for x values
-    const [y, setY] = useState([]); // Separate state for y values
-    const [result, setResult] = useState(null); // Result of the interpolation
-    const [error, setError] = useState(null); // Error handling state
-    const [xin, setXin] = useState(''); // Value for which we want to calculate interpolation
-    const [No, setNo] = useState(17); // Example: setting No to fetch/update data
+    const [x, setX] = useState([]); 
+    const [y, setY] = useState([]);  
+    const [result, setResult] = useState(null); 
+    const [error, setError] = useState(null); 
+    const [xin, setXin] = useState('');  
+    const [No, setNo] = useState(17);  
 
     useEffect(() => {
         getData();
@@ -26,9 +26,9 @@ const Lagrange = () => {
                 if (receivedData) {
                     const parsedX = JSON.parse(receivedData.a);
                     const parsedY = JSON.parse(receivedData.b);
-                    setSize(parsedX.length); // Set the size based on received data
-                    setX(parsedX); // Set x values
-                    setY(parsedY); // Set y values
+                    setSize(parsedX.length); 
+                    setX(parsedX);  
+                    setY(parsedY);  
                     setXin(receivedData.xin);
                 } else {
                     setError("No data found for the specified No.");
@@ -55,9 +55,9 @@ const Lagrange = () => {
     const handleNChange = (e) => {
         const numPoints = parseInt(e.target.value) || 0;
         setSize(numPoints);
-        setX(Array(numPoints).fill('')); // Initialize x values
-        setY(Array(numPoints).fill('')); // Initialize y values
-        updateData(); // Update data in the database when number of points changes
+        setX(Array(numPoints).fill('')); 
+        setY(Array(numPoints).fill(''));  
+        updateData();  
     };
 
     const handlePointChange = (index, field, value) => {
@@ -82,10 +82,10 @@ const Lagrange = () => {
             let term = y[i];
             for (let j = 0; j < n; j++) {
                 if (j !== i) {
-                    term *= (xin - x[j]) / (x[i] - x[j]); // Lagrange basis polynomial
+                    term *= (xin - x[j]) / (x[i] - x[j]);  
                 }
             }
-            result += term; // Add term to the result
+            result += term;  
         }
 
         return result;

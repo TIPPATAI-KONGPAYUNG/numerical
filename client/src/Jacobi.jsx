@@ -8,8 +8,8 @@ const Jacobi = () => {
     const [vectorB, setVectorB] = useState([]);
     const [solutionX, setSolutionX] = useState([]);
     const [showOutput, setShowOutput] = useState(false);
-    const [error, setError] = useState(null); // State for error messages
-    const [No, setNo] = useState(13); // Setting No = 13 for fetching data
+    const [error, setError] = useState(null); 
+    const [No, setNo] = useState(13);  
 
     useEffect(() => {
         getData();
@@ -17,7 +17,7 @@ const Jacobi = () => {
 
     useEffect(() => {
         const newMatrixA = Array.from({ length: size }, () => Array(size).fill(0));
-        const newVectorB = Array(size).fill(0); // Initialize vector b when size changes
+        const newVectorB = Array(size).fill(0);  
         setMatrixA(newMatrixA);
         setVectorB(newVectorB);
     }, [size]);
@@ -65,7 +65,7 @@ const Jacobi = () => {
                 }
                 xNew[i] = (vectorB[i] - sum) / matrixA[i][i];
             }
-            xOld = [...xNew]; // Update the old values for the next iteration
+            xOld = [...xNew];  
         }
 
         setSolutionX(xNew);

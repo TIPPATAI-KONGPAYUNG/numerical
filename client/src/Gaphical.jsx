@@ -6,63 +6,40 @@ import Axios from 'axios';
 const Graph = () => {
   const [data, setData] = useState([]); 
   const [result, setResult] = useState(null);
-  const [n, setN] = useState(10);
-  const [x, setX] = useState(0);
+  const [n, setN] = useState('');
+  const [x, setX] = useState('');
   const [esp, setEsp] = useState(0.000001);
-  const [equation, setEquation] = useState("43 * x - 180"); 
+  const [equation, setEquation] = useState(''); 
   const [errorMessage, setErrorMessage] = useState("");
   const [no, setNo] = useState(1); 
-  const [initialData, setInitialData] = useState({ equation, x, n }); 
-  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     getData();
   }, [no]);
 
-  useEffect(() => {
-    if (initialData.equation !== equation || initialData.x !== x || initialData.n !== n) {
-      updateData();
-    }
-  }, [equation, x, n]);
-
   const getData = () => {
-    setLoading(true); 
-    Axios.get(`http://localhost:3001/${no}`)
-      .then((response) => {
-        if (response.data.length > 0) {
-          const receivedData = response.data[0];
+    Axios.get(`http://localhost:3001/${no}`).then((response) => {
+        const receivedData = response.data;
+        if (receivedData) {
           setEquation(receivedData.equation); 
           setX(receivedData.x);
           setN(receivedData.n);
-          
-          if (Array.isArray(receivedData.data)) {
-            setData(receivedData.data);
-          } else {
-            console.error("Data is not an array:", receivedData.data);
-            setData([]); 
-          }
-
-          setInitialData({ equation: receivedData.equation, x: receivedData.x, n: receivedData.n });
-        } else {
+        }else {
           console.error("No data found for the specified No.");
-          setErrorMessage("No data found for the specified No.");
-          setData([]); 
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
         setErrorMessage("Error fetching data. Please try again.");
       })
-      .finally(() => {
-        setLoading(false); 
-      });
+      
   };
 
   const updateData = () => {
     Axios.put(`http://localhost:3001/update/${no}`, { 
-      equation: equation, 
-      x: x,
-      n: n
+      equation: equation.toString(), 
+      x: x.toString(),
+      n: n.toString()
     })
     .then(() => {
       console.log("Data updated successfully");
@@ -70,6 +47,21 @@ const Graph = () => {
     .catch((error) => {
       console.error("Error updating data:", error);
     });
+  };
+
+  const handleEquationChange = (e) => {
+    setEquation(e.target.value);
+    updateData();
+  };
+
+  const handleXChange = (e) => {
+    setX(e.target.value);
+    updateData();
+  };
+
+  const handleNChange = (e) => {
+    setN(e.target.value);
+    updateData();
   };
 
   const f = (xVal) => {
@@ -135,16 +127,6 @@ const Graph = () => {
     setData(currentIterations);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "n") setN(value);
-    if (name === "x") setX(value);
-  };
-
-  const handleEquationChange = (e) => {
-    setEquation(e.target.value);
-  };
-
   return (
     <Container>
       <Form>
@@ -163,7 +145,7 @@ const Graph = () => {
             type="number"
             name="x"
             value={x}
-            onChange={handleInputChange}
+            onChange={handleXChange}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
           />
@@ -172,12 +154,12 @@ const Graph = () => {
             type="number"
             name="n"
             value={n}
-            onChange={handleInputChange}
+            onChange={handleNChange}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
           />
         </Form.Group>
-        <Button variant="dark" onClick={calculateRoot} disabled={loading}>
+        <Button variant="dark" onClick={calculateRoot}>
           Calculate
         </Button>
       </Form>

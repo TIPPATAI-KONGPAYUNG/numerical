@@ -4,12 +4,12 @@ import Axios from 'axios';
 
 const Newton = () => {
     const [size, setSize] = useState(0);
-    const [x, setX] = useState([]); // Separate state for x values
-    const [y, setY] = useState([]); // Separate state for y values
-    const [result, setResult] = useState(null); // Result of the interpolation
-    const [error, setError] = useState(null); // Error handling state
-    const [xin, setXin] = useState(''); // Value for which we want to calculate interpolation
-    const [No, setNo] = useState(16); // Example: setting No to fetch/update data
+    const [x, setX] = useState([]);  
+    const [y, setY] = useState([]);  
+    const [result, setResult] = useState(null);  
+    const [error, setError] = useState(null);  
+    const [xin, setXin] = useState('');  
+    const [No, setNo] = useState(16);  
 
     useEffect(() => {
         getData();
@@ -26,9 +26,9 @@ const Newton = () => {
                 if (receivedData) {
                     const parsedX = JSON.parse(receivedData.a);
                     const parsedY = JSON.parse(receivedData.b);
-                    setSize(parsedX.length); // Set the size based on received data
-                    setX(parsedX); // Set x values
-                    setY(parsedY); // Set y values
+                    setSize(parsedX.length);  
+                    setX(parsedX);  
+                    setY(parsedY);  
                     setXin(receivedData.xin);
                 } else {
                     setError("No data found for the specified No.");
@@ -55,9 +55,9 @@ const Newton = () => {
     const handleNChange = (e) => {
         const numPoints = parseInt(e.target.value) || 0;
         setSize(numPoints);
-        setX(Array(numPoints).fill('')); // Initialize x values
-        setY(Array(numPoints).fill('')); // Initialize y values
-        updateData(); // Update data in the database when number of points changes
+        setX(Array(numPoints).fill(''));  
+        setY(Array(numPoints).fill(''));  
+        updateData();  
     };
 
     const handlePointChange = (index, field, value) => {
@@ -75,20 +75,19 @@ const Newton = () => {
         
     };
 
-    // Memoization table for storing divided differences
+     
     const dividedDifferences = [];
 
     const calculateDividedDifference = (i, j) => {
         if (dividedDifferences[i] && dividedDifferences[i][j] !== undefined) {
-            return dividedDifferences[i][j]; // Return cached result
+            return dividedDifferences[i][j];  
         }
         if (j === 0) {
-            return y[i]; // Base case: y value at index i
+            return y[i];  
         }
         const value = (calculateDividedDifference(i + 1, j - 1) - calculateDividedDifference(i, j - 1)) / 
                       (x[i + j] - x[i]);
         
-        // Store the result in the memoization table
         if (!dividedDifferences[i]) {
             dividedDifferences[i] = [];
         }
@@ -104,7 +103,7 @@ const Newton = () => {
             for (let k = 0; k < j; k++) {
                 term *= (xin - x[k]);
             }
-            result += term; // Add term to the result
+            result += term; 
         }
         return result;
     };
@@ -119,7 +118,7 @@ const Newton = () => {
 
         const calculatedResult = calculateNewtonInterpolation(xinValue);
         setResult(calculatedResult);
-        setError(null); // Reset error
+        setError(null);  
     };
 
     return (

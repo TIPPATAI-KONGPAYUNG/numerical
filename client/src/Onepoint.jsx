@@ -6,44 +6,38 @@ import Axios from 'axios';
 const OnePointIteration = () => {
   const [data, setData] = useState([]);
   const [result, setResult] = useState(null);
-  const [initialGuess, setInitialGuess] = useState(1); 
-  const [equation, setEquation] = useState("(x + 7 / x) / 2"); 
+  const [initialGuess, setInitialGuess] = useState(); 
+  const [equation, setEquation] = useState(""); 
   const [errorMessage, setErrorMessage] = useState("");
-  const [no, setNo] = useState(4); // Set your key value here
-  const [initialData, setInitialData] = useState({});
+  const [no, setNo] = useState(4); 
 
+
+  //(x + 7 / x) / 2
+  //1
   useEffect(() => {
     getData();
   }, [no]);
 
-  useEffect(() => {
-    
-    if (initialData.equation !== equation || initialData.x !== initialGuess) {
-      updateData();
-    }
-  }, [equation, initialGuess]);
-
   const getData = () => {
     Axios.get(`http://localhost:3001/${no}`)
-      .then((response) => {
-        if (response.data.length > 0) {
-          const receivedData = response.data[0];
-          setEquation(receivedData.equation);
-          setInitialGuess(receivedData.x); 
-          setInitialData(receivedData); 
-        } else {
-          console.error("No data found for the specified No.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
+        .then((response) => {
+            const receivedData = response.data;
+            if (receivedData) {
+                setEquation(receivedData.equation); 
+                setInitialGuess(receivedData.x);
+            } else {
+                console.error("No data found for the specified No.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+};
 
   const updateData = () => {
     Axios.put(`http://localhost:3001/update/${no}`, {
-      equation: equation,
-      x: initialGuess
+      equation: equation.toString(),
+      x: initialGuess.toString()
     })
       .then(() => {
         console.log("Data updated successfully");
@@ -91,12 +85,13 @@ const OnePointIteration = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "initialGuess") setInitialGuess(value);
+    setInitialGuess(e.target.value);
+    updateData();
   };
 
   const handleEquationChange = (e) => {
     setEquation(e.target.value);
+    updateData();
   };
 
   return (

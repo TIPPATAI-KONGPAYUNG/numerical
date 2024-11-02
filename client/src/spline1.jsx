@@ -4,12 +4,12 @@ import Axios from 'axios';
 
 const spline = () => {
     const [size, setSize] = useState(0);
-    const [x, setX] = useState([]); // Separate state for x values
-    const [y, setY] = useState([]); // Separate state for y values
-    const [result, setResult] = useState(null); // Result of the interpolation
-    const [error, setError] = useState(null); // Error handling state
-    const [xin, setXin] = useState(''); // Value for which we want to calculate interpolation
-    const [No, setNo] = useState(18); // Example: setting No to fetch/update data
+    const [x, setX] = useState([]);  
+    const [y, setY] = useState([]);  
+    const [result, setResult] = useState(null);  
+    const [error, setError] = useState(null);  
+    const [xin, setXin] = useState(''); 
+    const [No, setNo] = useState(18); 
 
     useEffect(() => {
         getData();
@@ -27,9 +27,9 @@ const spline = () => {
                 if (receivedData) {
                     const parsedX = JSON.parse(receivedData.a);
                     const parsedY = JSON.parse(receivedData.b);
-                    setSize(parsedX.length); // Set the size based on received data
-                    setX(parsedX); // Set x values
-                    setY(parsedY); // Set y values
+                    setSize(parsedX.length);  
+                    setX(parsedX);  
+                    setY(parsedY);  
                     setXin(receivedData.xin);
                 } else {
                     setError("No data found for the specified No.");
@@ -56,9 +56,9 @@ const spline = () => {
     const handleNChange = (e) => {
         const numPoints = parseInt(e.target.value) || 0;
         setSize(numPoints);
-        setX(Array(numPoints).fill('')); // Initialize x values
-        setY(Array(numPoints).fill('')); // Initialize y values
-        updateData(); // Update data in the database when number of points changes
+        setX(Array(numPoints).fill(''));  
+        setY(Array(numPoints).fill(''));  
+        updateData();  
     };
 
     const handlePointChange = (index, field, value) => {
@@ -121,7 +121,7 @@ const spline = () => {
             }
         }
 
-        return null; // If xin is out of bounds
+        return null;  
     };
 
     const handleSubmit = (e) => {
@@ -134,7 +134,7 @@ const spline = () => {
 
         const calculatedResult = calculateCubicSpline(xinValue);
         setResult(calculatedResult);
-        setError(null); // Reset error
+        setError(null);  
     };
 
     return (

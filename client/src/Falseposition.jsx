@@ -6,43 +6,40 @@ import Axios from 'axios';
 const FalsePosition = () => {
   const [data, setData] = useState([]);
   const [firstResult, setFirstResult] = useState(null);
-  const [equation, setEquation] = useState("x^4 - 13");
-  const [xl, setXL] = useState("1.5");
-  const [xr, setXR] = useState("2");
-  const [no, setNo] = useState(3); // Key value for fetching data
+  const [equation, setEquation] = useState('');
+  const [xl, setXL] = useState('');
+  const [xr, setXR] = useState('');
+  const [no, setNo] = useState(3); 
 
   useEffect(() => {
     getData();
   }, [no]);
 
-  useEffect(() => {
-    updateData();
-  }, [equation, xl, xr]); // Update data on equation or bounds change
-
   // Fetch data from API
-  const getData = async () => {
-    try {
-      const response = await Axios.get(`http://localhost:3001/${no}`);
-      if (response.data.length > 0) {
-        const { equation: fetchedEquation, xl: fetchedXL, xr: fetchedXR } = response.data[0];
-        setEquation(fetchedEquation);
-        setXL(fetchedXL);
-        setXR(fetchedXR);
-      } else {
-        console.error("No data found for the specified No.");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const getData = () => {
+    Axios.get(`http://localhost:3001/${no}`)
+        .then((response) => {
+            const receivedData = response.data;
+            if (receivedData) {
+                setEquation(receivedData.equation); 
+                setXL(receivedData.xl);
+                setXR(receivedData.xr);
+            } else {
+                console.error("No data found for the specified No.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+};
 
   // Update data on the server
   const updateData = async () => {
     try {
       await Axios.put(`http://localhost:3001/update/${no}`, {
-        equation,
-        xl,
-        xr
+        equation: equation.toString(),
+        xl: xl.toString(),
+        xr: xr.toString()
       });
       console.log("Data updated successfully");
     } catch (error) {
@@ -66,7 +63,6 @@ const FalsePosition = () => {
       }
     };
 
-    // Check if function values at the boundaries have different signs
     if (f(xlNum) * f(xrNum) > 0) {
       alert("f(xL) and f(xR) must have different signs.");
       return;
@@ -76,7 +72,6 @@ const FalsePosition = () => {
       xM = (xlNum * f(xrNum) - xrNum * f(xlNum)) / (f(xrNum) - f(xlNum));
       const fxM = f(xM);
 
-      // Check if function evaluation was successful
       if (fxM === null) {
         alert("Error evaluating the function at X_M. Please check the equation.");
         return;
@@ -86,11 +81,10 @@ const FalsePosition = () => {
 
       if (Math.abs(fxM) < tolerance) {
         setData(newData);
-        setFirstResult(xM); // Save result on convergence
+        setFirstResult(xM);
         return;
       }
 
-      // Adjusting intervals based on function signs
       if (fxM * f(xlNum) < 0) {
         xrNum = xM; 
       } else {
@@ -99,10 +93,9 @@ const FalsePosition = () => {
     }
 
     setData(newData);
-    setFirstResult(xM); // Final result if not converged
+    setFirstResult(xM); 
   };
 
-  // Handle the calculation when the button is clicked
   const calculateRoot = () => {
     const xlNum = parseFloat(xl);
     const xrNum = parseFloat(xr);
@@ -114,8 +107,20 @@ const FalsePosition = () => {
     calculateFalsePosition(xlNum, xrNum);
   };
 
-  // Update input values
-  const handleInputChange = (setter) => (event) => setter(event.target.value);
+  const handleEquationChange = (e) => {
+    setEquation(e.target.value);
+    updateData();
+  };
+
+  const handleXLChange = (e) => {
+    setXL(e.target.value);
+    updateData();
+  };
+
+  const handleXRChange = (e) => {
+    setXR(e.target.value);
+    updateData();
+  };
 
   return (
     <Container>
@@ -125,7 +130,7 @@ const FalsePosition = () => {
           <input
             type="text"
             value={equation}
-            onChange={handleInputChange(setEquation)}
+            onChange={handleEquationChange}
             style={{ width: "100%", margin: "0 auto" }}
             className="form-control"
           />
@@ -134,7 +139,7 @@ const FalsePosition = () => {
           <input
             type="number"
             value={xl}
-            onChange={handleInputChange(setXL)}
+            onChange={handleXLChange}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
           />
@@ -142,7 +147,7 @@ const FalsePosition = () => {
           <input
             type="number"
             value={xr}
-            onChange={handleInputChange(setXR)}
+            onChange={handleXRChange}
             style={{ width: "30%", margin: "0 auto" }}
             className="form-control"
           />
