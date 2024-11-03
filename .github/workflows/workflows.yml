@@ -35,7 +35,7 @@ jobs:
       - name: Build and Push Frontend
         uses: docker/build-push-action@v3
         with:
-          file: ./Dockerfile 
+          file: ./client/Dockerfile 
           push: true
           tags: TIPPATAI-KONGPAYUNG/numerical:last
        
