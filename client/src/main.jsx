@@ -19,6 +19,8 @@ import Conjugate from './Conjugate.jsx';
 import Newton from './Newton.jsx';
 import Lagrange from './Lagrange.jsx';
 import Spline from './spline1.jsx';
+import LinearRegession from './LinearRegession.jsx';
+import PolyRegession from './PolyRegession.jsx';
 
 const App = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
@@ -42,6 +44,8 @@ const App = () => {
     ,{ title: 'Newton', component: <Newton />}
     ,{ title: 'Lagrange', component: <Lagrange />}
     ,{ title: 'Spline', component: <Spline />}
+    ,{ title: 'LinearRegession', component: <LinearRegession />}
+    ,{ title: 'PolyRegession', component: <PolyRegession />}
     
   ];
 
